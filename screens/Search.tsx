@@ -9,32 +9,22 @@ import {
 } from "react-native";
 
 const Search = () => {
-    const [searchedTracks, setSearchedTracks] = useState([
-        {
-            id: 1,
-            title: "Track 1",
-            image:
-                "https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg",
-        },
-        {
-            id: 2,
-            title: "Track 2",
-            image:
-                "https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg",
-        },
-        {
-            id: 3,
-            title: "Track 3",
-            image:
-                "https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg",
-        },
-        {
-            id: 4,
-            title: "Track 4",
-            image:
-                "https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg",
-        },
-    ]);
+    const [searchedTracks, setSearchedTracks] = useState<any[]>([]);
+
+    function search(query: string) {
+        fetch("https://streamify.jjhost.tk/search", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                query: query,
+            })
+        }).then((res) => res.json()).then((data) => {
+            console.log(data);
+            setSearchedTracks(data);
+        });
+    }
 
     return (
         <View>
@@ -43,12 +33,13 @@ const Search = () => {
                     placeholder="Search tracks..."
                     style={styles.searchInput}
                     placeholderTextColor={'#888'}
+                    onChangeText={(query) => search(query)}
                 />
             </View>
             <ScrollView>
                 {searchedTracks.map((track) => (
                     <View style={styles.trackCard} key={track.id}>
-                        <Image source={{ uri: track.image }} style={styles.trackImage} />
+                        <Image source={{ uri: track.thumb }} style={styles.trackImage} />
                         <Text style={styles.trackTitle}>{track.title}</Text>
                     </View>
                 ))}
