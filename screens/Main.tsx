@@ -5,25 +5,13 @@ const Main = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetStateAct
     return (
         <ScrollView>
             <View style={styles.header}>
+                <Image source={require("../static/logo.png")} style={styles.logo}></Image>
                 <Text style={styles.title}>Welcome to Streamify</Text>
                 <Text style={styles.subtitle}>Get the music you love, for free</Text>
+
             </View>
             <View style={styles.recentlyPlayed}>
                 <Text style={styles.sectionTitle}>Recently Played</Text>
-                <View style={styles.songContainer}>
-                    <Image
-                        style={styles.songImage}
-                        source={{ uri: "https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg" }}
-                    />
-                    <Text style={styles.songText}>Song 1</Text>
-                </View>
-                <TouchableOpacity style={styles.songContainer} onPress={() => setActiveTab('Player')}>
-                    <Image
-                        style={styles.songImage}
-                        source={{ uri: "https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg" }}
-                    />
-                    <Text style={styles.songText}>Song 2</Text>
-                </TouchableOpacity>
                 <TouchableOpacity style={styles.songContainer} onPress={() => setActiveTab('Player')}>
                     <Image
                         style={styles.songImage}
@@ -34,36 +22,28 @@ const Main = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetStateAct
             </View>
             <View style={styles.recommendations}>
                 <Text style={styles.sectionTitle}>Recommended for You</Text>
-                <View style={styles.songContainer}>
+                <TouchableOpacity style={styles.songContainer} onPress={() => setActiveTab('Player')}>
                     <Image
                         style={styles.songImage}
                         source={{ uri: "https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg" }}
                     />
-                    <Text style={styles.songText}>Song 4</Text>
-                </View>
-                <View style={styles.songContainer}>
-                    <Image
-                        style={styles.songImage}
-                        source={{ uri: "https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg" }}
-                    />
-                    <Text style={styles.songText}>Song 5</Text>
-                </View>
-                <View style={styles.songContainer}>
-                    <Image
-                        style={styles.songImage}
-                        source={{ uri: "https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg" }}
-                    />
-                    <Text style={styles.songText}>Song 6</Text>
-                </View>
+                    <Text style={styles.songText}>Song 3</Text>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
+    logo: {
+        width: 128,
+        height: 128,
+        marginBottom: 16,
+    },
     header: {
         alignItems: "center",
-        marginBottom: 32,
+        paddingBottom: 16,
+        marginBottom: 16
     },
     title: {
         color: "#FFF",

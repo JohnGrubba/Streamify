@@ -6,24 +6,31 @@ import Search from './screens/Search';
 import Library from './screens/Library';
 import PlayerBar from './components/PlayerBar';
 import Player from './screens/Player';
-import TrackPlayer, { Capability, Event, Track } from 'react-native-track-player';
+import TrackPlayer, { Capability, Event, Track, AppKilledPlaybackBehavior } from 'react-native-track-player';
 
 const ex_track = {
   title: "Indian Beat",
   artist: "Indian Guy",
-  url: 'https://cdn.pixabay.com/audio/2023/01/08/audio_e6d67cd42f.mp3', // Load media from the file system
+  url: 'https://cdn.pixabay.com/audio/2023/01/08/audio_e6d67cd42f.mp3',
   artwork: 'https://i.pinimg.com/474x/1b/a5/e3/1ba5e3c744e5ebd7bd4bbd54fe5ac8a4--indian-meme.jpg',
 };
 
 const ex_track2 = {
   title: "Chill Sus Music",
   artist: "Gay Guy",
-  url: 'https://cdn.pixabay.com/audio/2023/03/16/audio_df7d9198c3.mp3', // Load media from the file system
+  url: 'https://cdn.pixabay.com/audio/2023/03/16/audio_df7d9198c3.mp3',
   artwork: 'https://cdn.pixabay.com/audio/2023/03/19/12-27-22-207_200x200.jpg',
 };
 
 async function player() {
-  await TrackPlayer.setupPlayer().catch((e) => console.log(e));
+  try {
+    await TrackPlayer.setupPlayer()
+  }
+  catch {
+    console.log("Player already initialized");
+    return;
+  }
+
   await TrackPlayer.reset();
   TrackPlayer.updateOptions({
     // Media controls capabilities
@@ -37,6 +44,9 @@ async function player() {
 
     // Capabilities that will show up when the notification is in the compact form on Android
     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext, Capability.SkipToPrevious],
+    android: {
+      appKilledPlaybackBehavior: AppKilledPlaybackBehavior.ContinuePlayback
+    }
   });
   console.log("Player initialized");
   await TrackPlayer.add([ex_track, ex_track2])
@@ -49,9 +59,10 @@ const App = () => {
   const [currentTrack, setTrack] = useState<void | Track | null>(null);
 
   TrackPlayer.addEventListener(Event.PlaybackTrackChanged, async (event) => {
-    const trackId = event.nextTrack;
-    const track = await TrackPlayer.getTrack(trackId).catch((e) => console.log(e));
-    setTrack(track);
+    if (event.nextTrack != null) {
+      const track = await TrackPlayer.getTrack(event.nextTrack);
+      setTrack(track);
+    }
   });
 
   return (
