@@ -2,15 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Slider from '@react-native-community/slider';
 import Feather from 'react-native-vector-icons/Feather';
-import TrackPlayer, { usePlaybackState, State, useProgress } from 'react-native-track-player';
-
-async function Play() {
-    TrackPlayer.play();
-}
-
-async function Pause() {
-    TrackPlayer.pause();
-}
+import TrackPlayer, { usePlaybackState, State, useProgress, Track } from 'react-native-track-player';
 
 // format the time in minutes:seconds
 const formatTime = (seconds: number) => {
@@ -20,7 +12,7 @@ const formatTime = (seconds: number) => {
     return `${minutes}:${leadingZero}${remainingSeconds}`;
 };
 
-const Player = () => {
+const Player = ({ currentTrack }: { currentTrack: void | Track | null }) => {
     const playbackState = usePlaybackState();
     const { position, duration } = useProgress();
 
@@ -29,11 +21,11 @@ const Player = () => {
             <View style={styles.artworkContainer}>
                 <Image
                     style={styles.artwork}
-                    source={{ uri: "https://i1.sndcdn.com/artworks-2dn6bE12SwM8REHX-ohbJyg-t200x200.jpg" }}
+                    source={{ uri: currentTrack?.artwork as string != null ? currentTrack?.artwork as string : "https://www.namepros.com/attachments/empty-png.89209/" }}
                 />
             </View>
-            <Text style={styles.title}>Title of Song</Text>
-            <Text style={styles.artists}>Artist 1, Artist 2</Text>
+            <Text style={styles.title}>{currentTrack?.title}</Text>
+            <Text style={styles.artists}>{currentTrack?.artist}</Text>
             <View style={styles.progressContainer}>
                 <Text style={styles.progressText}>{formatTime(position)}</Text>
                 <Slider
@@ -49,17 +41,23 @@ const Player = () => {
                 <Text style={styles.progressText}>{formatTime(duration)}</Text>
             </View>
             <View style={styles.controls}>
-                <Feather name="skip-back" size={35} color="white" />
+                <TouchableOpacity onPress={async () => TrackPlayer.skipToPrevious()}>
+                    <Feather name="skip-back" size={35} color="white" />
+                </TouchableOpacity>
+
                 {playbackState === State.Playing ? (
-                    <TouchableOpacity onPress={Pause}>
+                    <TouchableOpacity onPress={async () => TrackPlayer.pause()}>
                         <Feather name="pause" size={35} color="white" />
                     </TouchableOpacity>
                 ) : (
-                    <TouchableOpacity onPress={Play}>
+                    <TouchableOpacity onPress={async () => TrackPlayer.play()}>
                         <Feather name="play" size={35} color="white" />
                     </TouchableOpacity>
                 )}
-                <Feather name="skip-forward" size={35} color="white" />
+                <TouchableOpacity onPress={async () => TrackPlayer.skipToNext()}>
+                    <Feather name="skip-forward" size={35} color="white" />
+                </TouchableOpacity>
+
             </View>
         </View>
     );

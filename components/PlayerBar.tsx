@@ -1,27 +1,27 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import TrackPlayer, { usePlaybackState, State, useProgress } from 'react-native-track-player';
+import TrackPlayer, { usePlaybackState, State, Track } from 'react-native-track-player';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 
-const PlayerBar = ({ title, image, artist, setActiveTab, activeTab }: { title: string, image: string, artist: string, setActiveTab: React.Dispatch<React.SetStateAction<string>>, activeTab: string }) => {
+const PlayerBar = ({ currentTrack, setActiveTab, activeTab }: { currentTrack: void | Track | null, title: string, image: string, artist: string, setActiveTab: React.Dispatch<React.SetStateAction<string>>, activeTab: string }) => {
     const playbackState = usePlaybackState();
     return (
         <View>
             {activeTab !== 'Player' ? (
                 <TouchableOpacity style={styles.container} onPress={() => setActiveTab('Player')}>
-                    <Image source={{ uri: image }} style={styles.image} />
+                    <Image source={{ uri: currentTrack?.artwork as string != null ? currentTrack?.artwork as string : "https://www.namepros.com/attachments/empty-png.89209/" }} style={styles.image} />
                     <View style={styles.details}>
-                        <Text style={styles.title}>{title}</Text>
-                        <Text style={styles.artist}>{artist}</Text>
+                        <Text style={styles.title}>{currentTrack?.title}</Text>
+                        <Text style={styles.artist}>{currentTrack?.artist}</Text>
                     </View>
                     <View style={styles.right}>
                         {playbackState === State.Playing ? (
-                            <TouchableOpacity onPress={TrackPlayer.pause}>
+                            <TouchableOpacity onPress={async () => TrackPlayer.pause()}>
                                 <FontAwesome5 name="pause" size={25} color="white" />
                             </TouchableOpacity>
                         ) : (
-                            <TouchableOpacity onPress={TrackPlayer.play}>
+                            <TouchableOpacity onPress={async () => TrackPlayer.play()}>
                                 <FontAwesome5 name="play" size={25} color="white" />
                             </TouchableOpacity>
                         )}
