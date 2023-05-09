@@ -9,12 +9,15 @@ import Player from './screens/Player';
 import TrackPlayer, { Capability } from 'react-native-track-player';
 
 const ex_track = {
+  title: "Indian Beat",
+  artist: "Indian Guy",
   url: 'https://cdn.pixabay.com/audio/2023/01/08/audio_e6d67cd42f.mp3', // Load media from the file system
   artwork: 'https://i.pinimg.com/474x/1b/a5/e3/1ba5e3c744e5ebd7bd4bbd54fe5ac8a4--indian-meme.jpg',
 };
 
 async function player() {
   await TrackPlayer.setupPlayer().catch((e) => console.log(e));
+  await TrackPlayer.reset();
   TrackPlayer.updateOptions({
     // Media controls capabilities
     capabilities: [
@@ -28,7 +31,7 @@ async function player() {
     // Capabilities that will show up when the notification is in the compact form on Android
     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext, Capability.SkipToPrevious],
   });
-  console.log("Player initialized")
+  console.log("Player initialized");
   await TrackPlayer.add([ex_track])
   await TrackPlayer.pause();
 }
