@@ -9,12 +9,8 @@ import Player from './screens/Player';
 import TrackPlayer, { Capability } from 'react-native-track-player';
 
 const ex_track = {
-  url: 'https://cdn.pixabay.com/audio/2023/05/07/audio_a614cb257b.mp3', // Load media from the file system
-  title: 'Ice Age',
-  artist: 'deadmau5',
-  // Load artwork from the file system:
-  artwork: 'https://i1.sndcdn.com/artworks-yVGSQ19zPpELip8j-rR6k8w-t200x200.jpg',
-  duration: 411
+  url: 'https://cdn.pixabay.com/audio/2023/01/08/audio_e6d67cd42f.mp3', // Load media from the file system
+  artwork: 'https://i.pinimg.com/474x/1b/a5/e3/1ba5e3c744e5ebd7bd4bbd54fe5ac8a4--indian-meme.jpg',
 };
 
 async function player() {
