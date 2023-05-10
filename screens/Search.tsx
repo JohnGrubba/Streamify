@@ -7,11 +7,22 @@ import {
     ScrollView,
     TextInput,
 } from "react-native";
+import Track from '../components/Track';
 
-const Search = () => {
+var dict = new Map();
+
+const Search = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetStateAction<string>> }) => {
     const [searchedTracks, setSearchedTracks] = useState<any[]>([]);
 
     function search(query: string) {
+        if (query == "" || query == null) {
+            setSearchedTracks([]);
+            return;
+        }
+        if (dict.has(query)) {
+            setSearchedTracks(dict.get(query));
+            return;
+        }
         fetch("https://streamify.jjhost.tk/search", {
             method: "POST",
             headers: {
@@ -21,27 +32,24 @@ const Search = () => {
                 query: query,
             })
         }).then((res) => res.json()).then((data) => {
-            console.log(data);
+            dict.set(query, data);
             setSearchedTracks(data);
         });
     }
 
     return (
-        <View>
+        <View style={{ height: "100%" }}>
             <View style={styles.searchContainer}>
                 <TextInput
                     placeholder="Search tracks..."
                     style={styles.searchInput}
                     placeholderTextColor={'#888'}
-                    onChangeText={(query) => search(query)}
+                    onSubmitEditing={(event) => search(event.nativeEvent.text)}
                 />
             </View>
             <ScrollView>
                 {searchedTracks.map((track) => (
-                    <View style={styles.trackCard} key={track.id}>
-                        <Image source={{ uri: track.thumb }} style={styles.trackImage} />
-                        <Text style={styles.trackTitle}>{track.title}</Text>
-                    </View>
+                    <Track key={track.id} id={track.id} setActiveTab={setActiveTab} thumbnail={track.thumb} title={track.title} artist={track.artist}></Track>
                 ))}
             </ScrollView>
         </View>

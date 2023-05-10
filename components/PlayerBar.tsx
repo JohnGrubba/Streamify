@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Easing } from 'react-native';
 import TrackPlayer, { usePlaybackState, State, Track } from 'react-native-track-player';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import TextTicker from 'react-native-text-ticker';
 
 
-const PlayerBar = ({ currentTrack, setActiveTab, activeTab }: { currentTrack: void | Track | null, title: string, image: string, artist: string, setActiveTab: React.Dispatch<React.SetStateAction<string>>, activeTab: string }) => {
+const PlayerBar = ({ currentTrack, setActiveTab, activeTab }: { currentTrack: void | Track | null, setActiveTab: React.Dispatch<React.SetStateAction<string>>, activeTab: string }) => {
     const playbackState = usePlaybackState();
     return (
         <View>
@@ -12,7 +13,9 @@ const PlayerBar = ({ currentTrack, setActiveTab, activeTab }: { currentTrack: vo
                 <TouchableOpacity style={styles.container} onPress={() => setActiveTab('Player')}>
                     <Image source={{ uri: currentTrack?.artwork as string != null ? currentTrack?.artwork as string : "https://www.namepros.com/attachments/empty-png.89209/" }} style={styles.image} />
                     <View style={styles.details}>
-                        <Text style={styles.title}>{currentTrack?.title}</Text>
+                        <TextTicker scrollSpeed={10} loop numberOfLines={1} animationType="bounce" easing={Easing.linear} bounceDelay={1000} style={styles.txt}>
+                            <Text style={styles.title}>{currentTrack?.title}</Text>
+                        </TextTicker>
                         <Text style={styles.artist}>{currentTrack?.artist}</Text>
                     </View>
                     <View style={styles.right}>
@@ -48,13 +51,13 @@ const styles = StyleSheet.create({
         borderRadius: 4,
     },
     details: {
-        marginLeft: 16,
+        marginHorizontal: 16
     },
     title: {
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 4,
+        marginBottom: 4
     },
     artist: {
         color: '#ccc',
@@ -64,6 +67,9 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-end',
+    },
+    txt: {
+        width: 250
     }
 });
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from "react-native";
+import Track from '../components/Track';
 
 const Main = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetStateAction<string>> }) => {
     return (
@@ -12,23 +13,13 @@ const Main = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetStateAct
             </View>
             <View style={styles.recentlyPlayed}>
                 <Text style={styles.sectionTitle}>Recently Played</Text>
-                <TouchableOpacity style={styles.songContainer} onPress={() => setActiveTab('Player')}>
-                    <Image
-                        style={styles.songImage}
-                        source={{ uri: "https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg" }}
-                    />
-                    <Text style={styles.songText}>Song 3</Text>
-                </TouchableOpacity>
+                <Track id="RfQPb-kz9Sc" setActiveTab={setActiveTab} thumbnail="https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg" title="Goofy aah55" artist="JJTV"></Track>
+                <Track id="RfQPb-kz9Sc" setActiveTab={setActiveTab} thumbnail="https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg" title="Goofy aah44" artist="JJTV"></Track>
             </View>
             <View style={styles.recommendations}>
                 <Text style={styles.sectionTitle}>Recommended for You</Text>
-                <TouchableOpacity style={styles.songContainer} onPress={() => setActiveTab('Player')}>
-                    <Image
-                        style={styles.songImage}
-                        source={{ uri: "https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg" }}
-                    />
-                    <Text style={styles.songText}>Song 3</Text>
-                </TouchableOpacity>
+                <Track id="RfQPb-kz9Sc" setActiveTab={setActiveTab} thumbnail="https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg" title="Goofy aah2" artist="JJTV"></Track>
+                <Track id="RfQPb-kz9Sc" setActiveTab={setActiveTab} thumbnail="https://i1.sndcdn.com/artworks-HpKm3lbkxQByw46m-YsaQog-t240x240.jpg" title="Goofy aah3" artist="JJTV"></Track>
             </View>
         </ScrollView>
     );
@@ -64,22 +55,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 16,
-    },
-    songContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 8,
-    },
-    songImage: {
-        width: 64,
-        height: 64,
-        marginRight: 16,
-        borderRadius: 8,
-    },
-    songText: {
-        color: "#FFF",
-        fontSize: 18,
-    },
+    }
 });
 
 export default Main;

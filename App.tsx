@@ -8,18 +8,11 @@ import PlayerBar from './components/PlayerBar';
 import Player from './screens/Player';
 import TrackPlayer, { Capability, Event, Track, AppKilledPlaybackBehavior } from 'react-native-track-player';
 
-const ex_track = {
-  title: "Indian Beat",
-  artist: "Indian Guy",
-  url: 'https://cdn.pixabay.com/audio/2023/01/08/audio_e6d67cd42f.mp3',
-  artwork: 'https://i.pinimg.com/474x/1b/a5/e3/1ba5e3c744e5ebd7bd4bbd54fe5ac8a4--indian-meme.jpg',
-};
-
-const ex_track2 = {
-  title: "Chill Sus Music",
-  artist: "Gay Guy",
-  url: 'https://cdn.pixabay.com/audio/2023/03/16/audio_df7d9198c3.mp3',
-  artwork: 'https://cdn.pixabay.com/audio/2023/03/19/12-27-22-207_200x200.jpg',
+var track = {
+  title: "ex",
+  artist: "arts",
+  url: "sas",
+  artwork: "saaas",
 };
 
 async function player() {
@@ -49,7 +42,6 @@ async function player() {
     }
   });
   console.log("Player initialized");
-  await TrackPlayer.add([ex_track, ex_track2])
   await TrackPlayer.pause();
 }
 player();
@@ -71,17 +63,14 @@ const App = () => {
         {activeTab === 'Home' ? (
           <Main setActiveTab={setActiveTab} />
         ) : activeTab === 'Search' ? (
-          <Search />
+          <Search setActiveTab={setActiveTab} />
         ) : activeTab === "Library" ? (
-          <Library />
+          <Library setActiveTab={setActiveTab} />
         ) : activeTab === "Player" ? (
           <Player currentTrack={currentTrack} />
         ) : null}
       </View>
       <PlayerBar
-        title="Song Title"
-        artist="Artist Name"
-        image="https://i1.sndcdn.com/artworks-yVGSQ19zPpELip8j-rR6k8w-t200x200.jpg"
         setActiveTab={setActiveTab}
         activeTab={activeTab}
         currentTrack={currentTrack}
