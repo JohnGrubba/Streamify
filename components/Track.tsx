@@ -2,6 +2,7 @@ import React from "react";
 import { Text, StyleSheet, Image, TouchableOpacity, View, Easing } from "react-native";
 import TextTicker from 'react-native-text-ticker';
 import TrackPlayer from 'react-native-track-player';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 async function playTrack(id: string, thumbnail: string, title: string, artist: string, setActiveTab: React.Dispatch<React.SetStateAction<string>>) {
     // Fetch Streaming URL
@@ -13,6 +14,7 @@ async function playTrack(id: string, thumbnail: string, title: string, artist: s
     }).then((res) => res.text()).then(async (data) => {
         console.log(data);
         let track = {
+            id: id,
             title: title,
             artist: artist,
             url: data,
@@ -22,6 +24,19 @@ async function playTrack(id: string, thumbnail: string, title: string, artist: s
         await TrackPlayer.add(track);
         await TrackPlayer.play();
         setActiveTab("Player");
+        // Add Track to recently played tracks
+        var history = (await AsyncStorage.getItem('history') ? JSON.parse(await AsyncStorage.getItem('history') as string) : []) as any[];
+        var new_thingy = [track, ...history.slice(0, 5)];
+        new_thingy = new_thingy.filter((value, index, self) =>
+            index === self.findIndex((t) => (
+                t.id === value.id
+            ))
+        )
+        try {
+            await AsyncStorage.setItem('history', JSON.stringify(new_thingy))
+        } catch (e) {
+            // saving error
+        }
     });
 }
 
@@ -46,7 +61,7 @@ const styles = StyleSheet.create({
     songContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 8,
+        marginBottom: 8
     },
     songImage: {
         width: 64,
