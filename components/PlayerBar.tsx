@@ -19,6 +19,9 @@ const PlayerBar = ({ currentTrack, setActiveTab, activeTab }: { currentTrack: vo
                         <Text style={styles.artist}>{currentTrack?.artist}</Text>
                     </View>
                     <View style={styles.right}>
+                        <TouchableOpacity onPress={async () => TrackPlayer.pause()}>
+                            <FontAwesome5 name="download" size={25} color="white" />
+                        </TouchableOpacity>
                         {playbackState === State.Playing ? (
                             <TouchableOpacity onPress={async () => TrackPlayer.pause()}>
                                 <FontAwesome5 name="pause" size={25} color="white" />
@@ -67,9 +70,10 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-end',
+        gap: 20
     },
     txt: {
-        width: 250
+        width: 210
     }
 });
 

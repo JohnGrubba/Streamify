@@ -6,38 +6,30 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 async function playTrack(id: string, thumbnail: string, title: string, artist: string, setActiveTab: React.Dispatch<React.SetStateAction<string>>) {
     // Fetch Streaming URL
-    fetch("https://streamify.jjhost.tk/stream/" + id, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        }
-    }).then((res) => res.text()).then(async (data) => {
-        console.log(data);
-        let track = {
-            id: id,
-            title: title,
-            artist: artist,
-            url: data,
-            artwork: thumbnail,
-        };
-        await TrackPlayer.reset();
-        await TrackPlayer.add(track);
-        await TrackPlayer.play();
-        setActiveTab("Player");
-        // Add Track to recently played tracks
-        var history = (await AsyncStorage.getItem('history') ? JSON.parse(await AsyncStorage.getItem('history') as string) : []) as any[];
-        var new_thingy = [track, ...history.slice(0, 5)];
-        new_thingy = new_thingy.filter((value, index, self) =>
-            index === self.findIndex((t) => (
-                t.id === value.id
-            ))
-        )
-        try {
-            await AsyncStorage.setItem('history', JSON.stringify(new_thingy))
-        } catch (e) {
-            // saving error
-        }
-    });
+    let track = {
+        id: id,
+        title: title,
+        artist: artist,
+        url: "https://streamify.jjhost.tk/stream/" + id,
+        artwork: thumbnail,
+    };
+    await TrackPlayer.reset();
+    await TrackPlayer.add(track);
+    await TrackPlayer.play();
+    setActiveTab("Player");
+    // Add Track to recently played tracks
+    var history = (await AsyncStorage.getItem('history') ? JSON.parse(await AsyncStorage.getItem('history') as string) : []) as any[];
+    var new_thingy = [track, ...history.slice(0, 5)];
+    new_thingy = new_thingy.filter((value, index, self) =>
+        index === self.findIndex((t) => (
+            t.id === value.id
+        ))
+    )
+    try {
+        await AsyncStorage.setItem('history', JSON.stringify(new_thingy))
+    } catch (e) {
+        // saving error
+    }
 }
 
 const Track = ({ id, thumbnail, title, artist, setActiveTab }: { id: string, thumbnail: string, title: string, artist: string, setActiveTab: React.Dispatch<React.SetStateAction<string>> }) => {

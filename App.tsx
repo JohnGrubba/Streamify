@@ -1,19 +1,13 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, AppState } from 'react-native';
 import NavigationBar from './components/NavBar';
 import Main from './screens/Main';
 import Search from './screens/Search';
 import Library from './screens/Library';
 import PlayerBar from './components/PlayerBar';
 import Player from './screens/Player';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import TrackPlayer, { Capability, Event, Track, AppKilledPlaybackBehavior } from 'react-native-track-player';
-
-var track = {
-  title: "ex",
-  artist: "arts",
-  url: "sas",
-  artwork: "saaas",
-};
 
 async function player() {
   try {
@@ -21,7 +15,6 @@ async function player() {
   }
   catch {
     console.log("Player already initialized");
-    return;
   }
 
   await TrackPlayer.reset();
@@ -32,16 +25,18 @@ async function player() {
       Capability.Pause,
       Capability.SkipToNext,
       Capability.SkipToPrevious,
-      Capability.Stop,
+      Capability.Stop
     ],
 
     // Capabilities that will show up when the notification is in the compact form on Android
     compactCapabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext, Capability.SkipToPrevious],
     android: {
-      appKilledPlaybackBehavior: AppKilledPlaybackBehavior.ContinuePlayback
+      appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification
     }
   });
   console.log("Player initialized");
+  var history = (await AsyncStorage.getItem('history') ? JSON.parse(await AsyncStorage.getItem('history') as string) : [])[0]
+  await TrackPlayer.add(history);
   await TrackPlayer.pause();
 }
 player();
