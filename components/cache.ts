@@ -1,8 +1,9 @@
 import RNFetchBlob from 'rn-fetch-blob';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 
-const getFile = async (id: string): Promise<string> => {
+const getFile = async (id: string, thumbnail: string, title: string, artist: string): Promise<string> => {
     const cachePath = `${RNFetchBlob.fs.dirs.CacheDir}/file_${id}`;
 
     // Check if the file with the given ID is cached
@@ -24,7 +25,15 @@ const getFile = async (id: string): Promise<string> => {
         if (fileSize && fileSize <= MAX_FILE_SIZE) {
             RNFetchBlob.config({
                 path: cachePath,
-            }).fetch('GET', url);
+            }).fetch('GET', url).then(async () => {
+                await AsyncStorage.setItem("song_" + id, JSON.stringify({
+                    id: id,
+                    path: cachePath,
+                    thumbnail: thumbnail,
+                    title: title,
+                    artist: artist
+                }));
+            });
         }
         else {
             // Too large to cache

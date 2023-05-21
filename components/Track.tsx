@@ -11,7 +11,7 @@ async function playTrack(id: string, thumbnail: string, title: string, artist: s
         id: id,
         title: title,
         artist: artist,
-        url: await getFile(id),
+        url: await getFile(id, thumbnail, title, artist),
         artwork: thumbnail,
     };
     console.log(track);
