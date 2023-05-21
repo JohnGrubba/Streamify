@@ -3,6 +3,7 @@ import { Text, StyleSheet, Image, TouchableOpacity, View, Easing } from "react-n
 import TextTicker from 'react-native-text-ticker';
 import TrackPlayer from 'react-native-track-player';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import getFile from "./cache";
 
 async function playTrack(id: string, thumbnail: string, title: string, artist: string, setActiveTab: React.Dispatch<React.SetStateAction<string>>) {
     // Fetch Streaming URL
@@ -10,9 +11,10 @@ async function playTrack(id: string, thumbnail: string, title: string, artist: s
         id: id,
         title: title,
         artist: artist,
-        url: "https://streamify.jjhost.tk/stream/" + id,
+        url: await getFile(id),
         artwork: thumbnail,
     };
+    console.log(track);
     await TrackPlayer.reset();
     await TrackPlayer.add(track);
     await TrackPlayer.play();

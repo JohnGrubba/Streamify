@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, AppState } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import NavigationBar from './components/NavBar';
 import Main from './screens/Main';
 import Search from './screens/Search';
