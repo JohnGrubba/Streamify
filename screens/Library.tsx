@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Track from '../components/Track';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -28,18 +28,20 @@ const Library = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetState
     }, []);
 
     return (
-        <View>
+        <View style={{ height: "100%" }}>
             <Text style={styles.text}>Cache</Text>
-            {tracks.map(track => (
-                <Track
-                    key={track.id}
-                    id={track.id}
-                    setActiveTab={setActiveTab}
-                    thumbnail={track.thumbnail}
-                    title={track.title}
-                    artist={track.artist}
-                />
-            ))}
+            <ScrollView>
+                {tracks.map(track => (
+                    <Track
+                        key={track.id}
+                        id={track.id}
+                        setActiveTab={setActiveTab}
+                        thumbnail={track.thumbnail}
+                        title={track.title}
+                        artist={track.artist}
+                    />
+                ))}
+            </ScrollView>
         </View>
     );
 };
