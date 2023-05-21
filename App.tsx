@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, AppState } from 'react-native';
 import NavigationBar from './components/NavBar';
 import Main from './screens/Main';
 import Search from './screens/Search';
@@ -51,6 +51,13 @@ const App = () => {
       setTrack(track);
     }
   });
+
+  useEffect(() => {
+    return () => {
+      console.log("App Closed / Unmounting Track Player")
+      TrackPlayer.reset();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
