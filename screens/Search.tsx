@@ -1,26 +1,18 @@
 import React, { useState } from "react";
 import {
     View,
-    Text,
     StyleSheet,
-    Image,
     ScrollView,
     TextInput,
 } from "react-native";
 import Track from '../components/Track';
 
-var dict = new Map();
-
 const Search = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetStateAction<string>> }) => {
     const [searchedTracks, setSearchedTracks] = useState<any[]>([]);
 
-    function search(query: string) {
+    async function search(query: string) {
         if (query == "" || query == null) {
             setSearchedTracks([]);
-            return;
-        }
-        if (dict.has(query)) {
-            setSearchedTracks(dict.get(query));
             return;
         }
         fetch("https://streamify.jjhost.tk/search", {
@@ -32,7 +24,6 @@ const Search = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetStateA
                 query: query,
             })
         }).then((res) => res.json()).then((data) => {
-            dict.set(query, data);
             setSearchedTracks(data);
         });
     }
@@ -44,7 +35,7 @@ const Search = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetStateA
                     placeholder="Search tracks..."
                     style={styles.searchInput}
                     placeholderTextColor={'#888'}
-                    onSubmitEditing={(event) => search(event.nativeEvent.text)}
+                    onSubmitEditing={async (event) => search(event.nativeEvent.text)}
                 />
             </View>
             <ScrollView>

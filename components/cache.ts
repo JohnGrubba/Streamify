@@ -11,6 +11,7 @@ const getFile = async (id: string, thumbnail: string, title: string, artist: str
 
     if (isCached) {
         // File is already cached, return the file path
+        console.log("Returning Cache URL")
         return cachePath;
     } else {
         // File is not cached, download it asynchronously
@@ -25,8 +26,8 @@ const getFile = async (id: string, thumbnail: string, title: string, artist: str
         if (fileSize && fileSize <= MAX_FILE_SIZE) {
             RNFetchBlob.config({
                 path: cachePath,
-            }).fetch('GET', url).then(async () => {
-                await AsyncStorage.setItem("song_" + id, JSON.stringify({
+            }).fetch('GET', url).then(() => {
+                AsyncStorage.setItem("song_" + id, JSON.stringify({
                     id: id,
                     path: cachePath,
                     thumbnail: thumbnail,
@@ -40,6 +41,7 @@ const getFile = async (id: string, thumbnail: string, title: string, artist: str
             console.log("Too Large too cache")
         }
         // Return the original URL
+        console.log("Returning URL (Caching in the Background)")
         return url;
     }
 };

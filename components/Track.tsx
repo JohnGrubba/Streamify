@@ -15,8 +15,8 @@ async function playTrack(id: string, thumbnail: string, title: string, artist: s
         artwork: thumbnail,
     };
     console.log(track);
-    await TrackPlayer.reset();
     await TrackPlayer.add(track);
+    await TrackPlayer.skipToNext();
     await TrackPlayer.play();
     // Add Track to recently played tracks
     var history = (await AsyncStorage.getItem('history') ? JSON.parse(await AsyncStorage.getItem('history') as string) : []) as any[];
