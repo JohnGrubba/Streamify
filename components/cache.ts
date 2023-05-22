@@ -33,7 +33,9 @@ const getFile = async (id: string, thumbnail: string, title: string, artist: str
                     thumbnail: thumbnail,
                     title: title,
                     artist: artist
-                }));
+                })).then(() => {
+                    console.log("Cached Song")
+                });
             });
         }
         else {

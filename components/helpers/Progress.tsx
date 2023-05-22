@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        height: 2
+        height: 4
     },
     progressBar: {
         height: '100%',

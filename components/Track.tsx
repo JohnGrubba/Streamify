@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
     songContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 8
+        marginBottom: 8,
+        width: 300
     },
     songImage: {
         width: 64,
