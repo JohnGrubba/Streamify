@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Easing } from 'react-native';
-import TrackPlayer, { usePlaybackState, State, Track } from 'react-native-track-player';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Easing, Animated } from 'react-native';
+import TrackPlayer, { usePlaybackState, State, Track, useProgress } from 'react-native-track-player';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import TextTicker from 'react-native-text-ticker';
 
-
 const PlayerBar = ({ currentTrack, setActiveTab, activeTab }: { currentTrack: void | Track | null, setActiveTab: React.Dispatch<React.SetStateAction<string>>, activeTab: string }) => {
     const playbackState = usePlaybackState();
+    const { position, duration } = useProgress();
+    const progressBarWidth = duration != 0 ? (position / duration) * 100 : 0;
+
     return (
         <View>
             {activeTab !== 'Player' ? (
@@ -29,10 +31,11 @@ const PlayerBar = ({ currentTrack, setActiveTab, activeTab }: { currentTrack: vo
                             </TouchableOpacity>
                         )}
                     </View>
-
+                    <View style={styles.progressBarContainer}>
+                        <View style={[styles.progressBar, { width: `${progressBarWidth}%` }]} />
+                    </View>
                 </TouchableOpacity>
             ) : null}
-
         </View>
     );
 };
@@ -44,6 +47,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#333',
         height: 60,
         paddingHorizontal: 16,
+        position: 'relative',
+        borderRadius: 5
     },
     image: {
         width: 46,
@@ -51,13 +56,13 @@ const styles = StyleSheet.create({
         borderRadius: 4,
     },
     details: {
-        marginHorizontal: 16
+        marginHorizontal: 16,
     },
     title: {
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 4
+        marginBottom: 4,
     },
     artist: {
         color: '#ccc',
@@ -66,11 +71,22 @@ const styles = StyleSheet.create({
     right: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+    },
+    progressBarContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 2
+    },
+    progressBar: {
+        height: '100%',
+        backgroundColor: '#1ED760',
     },
     txt: {
-        width: 250
-    }
+        width: 250,
+    },
 });
 
 export default PlayerBar;

@@ -18,7 +18,6 @@ async function playTrack(id: string, thumbnail: string, title: string, artist: s
     await TrackPlayer.reset();
     await TrackPlayer.add(track);
     await TrackPlayer.play();
-    setActiveTab("Player");
     // Add Track to recently played tracks
     var history = (await AsyncStorage.getItem('history') ? JSON.parse(await AsyncStorage.getItem('history') as string) : []) as any[];
     var new_thingy = [track, ...history.slice(0, 5)];
@@ -36,7 +35,7 @@ async function playTrack(id: string, thumbnail: string, title: string, artist: s
 
 const Track = ({ id, thumbnail, title, artist, setActiveTab }: { id: string, thumbnail: string, title: string, artist: string, setActiveTab: React.Dispatch<React.SetStateAction<string>> }) => {
     return (
-        <TouchableOpacity style={styles.songContainer} onPress={async () => await playTrack(id, thumbnail, title, artist, setActiveTab)}>
+        <TouchableOpacity style={styles.songContainer} onPress={async () => playTrack(id, thumbnail, title, artist, setActiveTab)}>
             <Image
                 style={styles.songImage}
                 source={{ uri: thumbnail }}
