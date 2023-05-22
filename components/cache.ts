@@ -22,21 +22,23 @@ const getFile = async (id: string, thumbnail: string, title: string, artist: str
 
         const contentLengthHeader = rsp.headers.get('Content-Length');
         const fileSize = contentLengthHeader ? parseInt(contentLengthHeader) : null;
-
+        console.log("File Size: " + fileSize)
         if (fileSize && fileSize <= MAX_FILE_SIZE) {
-            RNFetchBlob.config({
+            var blob = RNFetchBlob.config({
                 path: cachePath,
-            }).fetch('GET', url).then(() => {
-                AsyncStorage.setItem("song_" + id, JSON.stringify({
+            })
+            blob.fetch('GET', url).then(async (res) => {
+                console.log("Downloaded File")
+                await AsyncStorage.setItem("song_" + id, JSON.stringify({
                     id: id,
                     path: cachePath,
                     thumbnail: thumbnail,
                     title: title,
                     artist: artist
-                })).then(() => {
-                    console.log("Cached Song")
-                });
+                }));
+                console.log("Cached Song")
             });
+
         }
         else {
             // Too large to cache

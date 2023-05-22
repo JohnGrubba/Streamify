@@ -3,45 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, Animated, Easing } from "rea
 import Track from '../components/Track';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-async function getHistory(setHistory: React.Dispatch<React.SetStateAction<any[]>>) {
-    var history = (await AsyncStorage.getItem('history')
-        ? JSON.parse(await AsyncStorage.getItem('history') as string)
-        : []);
-    setHistory(history);
-}
-
-var recommendations: any[] = [];
-
-async function getRecommendations() {
-    recommendations = [];
-    var history = (await AsyncStorage.getItem('history')
-        ? JSON.parse(await AsyncStorage.getItem('history') as string)
-        : []);
-
-    // Get one recommendation for every track in history
-    await Promise.all(
-        history.map(async (track: any) => {
-            const response = await fetch("https://streamify.jjhost.tk/search", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    query: track.title + " " + track.artist,
-                })
-            });
-
-            const data = await response.json();
-            var rcmd = data.filter(
-                (value: any) => value.id !== track.id && value.artist === track.artist
-            )[0];
-            if (rcmd) recommendations.push(rcmd);
-        })
-    );
-    console.log(recommendations);
-}
-getRecommendations();
-const Main = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetStateAction<string>> }) => {
+const Main = ({ setActiveTab, recommendations }: { setActiveTab: React.Dispatch<React.SetStateAction<string>>, recommendations: any[] }) => {
     const [history, setHistory] = useState<any[]>([]);
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideAnim = useRef(new Animated.Value(-100)).current;
@@ -63,8 +25,15 @@ const Main = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetStateAct
         }).start();
     };
 
+    async function getHistory() {
+        var history = (await AsyncStorage.getItem('history')
+            ? JSON.parse(await AsyncStorage.getItem('history') as string)
+            : []);
+        setHistory(history);
+    }
+
     useEffect(() => {
-        getHistory(setHistory);
+        getHistory();
         fadeIn();
         slideIn();
     }, []);
@@ -91,7 +60,7 @@ const Main = ({ setActiveTab }: { setActiveTab: React.Dispatch<React.SetStateAct
             </Animated.View>
             <Animated.View style={[styles.recommendations, { opacity: fadeAnim }]}>
                 <View style={styles.inline}>
-                    <Text style={styles.sectionTitle}>Recommended for You</Text>
+                    <Text style={styles.sectionTitle}>Today's Picks</Text>
                 </View>
                 {recommendations.map((track) => (
                     <Track

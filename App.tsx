@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import NavigationBar from './components/NavBar';
 import Main from './screens/Main';
@@ -49,6 +49,46 @@ initializePlayer();
 const App = () => {
   const [activeTab, setActiveTab] = useState('Home');
   const [currentTrack, setTrack] = useState<void | Track | null>(null);
+  const [recommendations, setRecommendations] = useState<any[]>([]);
+
+  function getUniqueListBy(arr: Array<Object>, key: string) {
+    return [...new Map(arr.map(item => [item[key], item])).values()]
+  }
+
+  async function getRecommendations() {
+    setRecommendations([]);
+    var history = (await AsyncStorage.getItem('history')
+      ? JSON.parse(await AsyncStorage.getItem('history') as string)
+      : []);
+
+    // Get one recommendation for every track in history
+    var rcmds: Object[] = [];
+    await Promise.allSettled(
+      history.map(async (track: any) => {
+        const response = await fetch("https://streamify.jjhost.tk/search", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: track.title,
+          })
+        });
+
+        const data = await response.json();
+        var rcmd = data.filter(
+          (value: any) => value.id !== track.id && value.artist === track.artist && value.title !== track.title
+        )[0];
+        console.log(rcmd)
+        if (rcmd) rcmds.push(rcmd)
+      })
+    );
+    setRecommendations(getUniqueListBy(rcmds, "id"));
+  }
+
+  useEffect(() => {
+    getRecommendations();
+  }, []);
 
   TrackPlayer.addEventListener(Event.PlaybackTrackChanged, async (event) => {
     if (event.nextTrack != null) {
@@ -61,7 +101,7 @@ const App = () => {
     <View style={styles.container}>
       <View style={styles.main}>
         {activeTab === 'Home' ? (
-          <Main setActiveTab={setActiveTab} />
+          <Main setActiveTab={setActiveTab} recommendations={recommendations} />
         ) : activeTab === 'Search' ? (
           <Search setActiveTab={setActiveTab} />
         ) : activeTab === "Library" ? (
